@@ -1,0 +1,16 @@
+# One-click deploy on Render (free plan): the Express server also serves the React website.
+services:
+  - type: web
+    name: smartstay
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false          # paste your MongoDB Atlas connection string in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_VERSION
+        value: 20

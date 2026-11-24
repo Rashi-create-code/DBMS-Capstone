@@ -1,0 +1,13 @@
+{
+  "name": "smartstay",
+  "version": "2.0.0",
+  "private": true,
+  "description": "SmartStay - PG & hostel management (React + Express + MongoDB)",
+  "scripts": {
+    "build": "npm --prefix frontend install --include=dev && npm --prefix frontend run build && npm --prefix backend install",
+    "start": "npm --prefix backend start",
+    "seed": "npm --prefix backend run seed",
+    "test": "npm --prefix backend test"
+  },
+  "engines": { "node": ">=18" }
+}
