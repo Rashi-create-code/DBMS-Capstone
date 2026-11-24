@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 
 mongoose.set('strictQuery', true);
 
+let pending = null;                      // one shared connection attempt (important on serverless hosts like Vercel)
 async function connect(uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/smartstay') {
+  if (mongoose.connection.readyState === 0) pending = null;
   if (mongoose.connection.readyState === 1) return mongoose.connection;
-  await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
-  return mongoose.connection;
+  if (!pending) pending = mongoose.connect(uri, { serverSelectionTimeoutMS: 10000, maxPoolSize: 10 }).then(() => mongoose.connection).catch((e) => { pending = null; throw e; });
+  return pending;
 }
 
 // Run fn(session) inside a transaction: COMMIT when it finishes, ROLLBACK (nothing saved) on any error.
